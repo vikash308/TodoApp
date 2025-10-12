@@ -29,7 +29,7 @@ const store = mongoStore.create({
     },
     touchAfter: 24 * 3600
 })
-store.on("error", () => {
+store.on("error", (err) => {
     console.log("error in mongo session ", err)
 })
 const sessionoption = {
@@ -37,7 +37,7 @@ const sessionoption = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENV === "production", // HTTPS only
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",

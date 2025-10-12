@@ -26,6 +26,10 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
+    req.session.user = {
+        id: User._id,
+        username: User.username,
+    };
     res.json({ message: "Logged in successfully", user: req.user });
 });
 
