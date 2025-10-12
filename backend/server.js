@@ -8,6 +8,7 @@ const User = require("./models/user")
 const todoRouter = require("./routes/todo")
 const cors = require("cors")
 const methodOverride = require('method-override')
+const path = require("path");
 
 const app = express();
 
@@ -30,6 +31,10 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
+// Serve frontend build
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
 //      Routes
 app.get("/", (req, res) => {
     res.redirect("/dashboard")
@@ -37,7 +42,9 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRouter)
 app.use("/dashboard", todoRouter)
-
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+});
 
 
 //      Connection of DB

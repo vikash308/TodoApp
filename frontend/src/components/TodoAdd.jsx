@@ -15,7 +15,7 @@ const TodoAdd = ({ addNewTodo }) => {
     }
     try {
       const res = await axios.post(
-        "http://localhost:3000/dashboard",
+        `${import.meta.env.VITE_API_URL}/dashboard`,
         { text: task },
         { withCredentials: true }
       );

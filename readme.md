@@ -23,5 +23,4 @@ A modern **full-stack Todo application** built with **React**, **Tailwind CSS**,
 
 ---
 
-## **Folder Structure**
 

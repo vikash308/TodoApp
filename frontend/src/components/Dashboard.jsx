@@ -10,9 +10,12 @@ const Dashboard = () => {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/dashboard", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/dashboard`,
+        {
+          withCredentials: true,
+        }
+      );
       setTodos(res.data);
     } catch (err) {
       console.log("Error Fetching Todos", err);
@@ -41,7 +44,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/dashboard/${id}`, {
+      await axios.delete( `${import.meta.env.VITE_API_URL}/dashboard/${id}`, {
         withCredentials: true,
       });
       fetchTodos();
@@ -53,7 +56,7 @@ const Dashboard = () => {
   const handleMarkDone = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/dashboard/${id}`,
+         `${import.meta.env.VITE_API_URL}/dashboard/${id}`,
         { status: "completed" },
         { withCredentials: true }
       );
@@ -71,7 +74,7 @@ const Dashboard = () => {
   const handleEditSave = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/dashboard/${id}`,
+         `${import.meta.env.VITE_API_URL}/dashboard/${id}`,
         { text: editText },
         { withCredentials: true }
       );
