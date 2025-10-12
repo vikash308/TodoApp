@@ -11,6 +11,9 @@ const ProtectedRoute = ({ children }) => {
       try {
         await axios.get(`${api}/auth/check`, {
           withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         setIsAuth(true); // user is authenticated
       } catch (err) {
