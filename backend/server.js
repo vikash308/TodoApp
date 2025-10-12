@@ -43,7 +43,7 @@ passport.deserializeUser(User.deserializeUser());
 
 //      Routes
 app.get("/", (req, res) => {
-    res.redirect("/dashboard")
+    res.json({message : "done"})
 })
 
 app.use("/auth", authRouter)
