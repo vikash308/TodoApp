@@ -17,7 +17,7 @@ let api = process.env.VITE_API_URL;
     setLoading(true);
     try {
       const res = await axios.post(
-       `${api}auth/login`,
+       `${api}/auth/login`,
         { username: formData.username, password: formData.password },
         { withCredentials: true }
       );
