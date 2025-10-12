@@ -8,10 +8,11 @@ const User = require("./models/user")
 const todoRouter = require("./routes/todo")
 const cors = require("cors")
 const methodOverride = require('method-override')
-
+const bodyParser = require("body-parser");
 const app = express();
 
 //      Midllewares
+app.use(bodyParser.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL, 
     credentials: true
@@ -20,10 +21,17 @@ app.use(methodOverride('_method'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: process.env.SECRET,
+    name: "connect.sid",
+    secret: process.env.SECRET, // replace with a strong secret
     resave: false,
-    saveUninitialized: true,
-}))
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: true,       // must be true if frontend uses HTTPS
+        sameSite: "none",   // allows cross-origin cookies
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
