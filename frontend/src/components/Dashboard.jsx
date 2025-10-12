@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
-  let api = process.env.VITE_API_URL;
+  let api = import.meta.env.VITE_API_URL;
 
   const fetchTodos = async () => {
     try {

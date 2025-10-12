@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 const ProtectedRoute = ({ children }) => {
   const [isAuth, setIsAuth] = useState(null); 
-let api = process.env.VITE_API_URL;
+  let api = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const checkAuth = async () => {
       try {

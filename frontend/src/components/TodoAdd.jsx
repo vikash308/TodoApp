@@ -4,7 +4,7 @@ import axios from "axios";
 const TodoAdd = ({ addNewTodo }) => {
   const [task, setTask] = useState("");
   const [message, setMessage] = useState("");
-let api = process.env.VITE_API_URL;
+  let api = import.meta.env.VITE_API_URL;
   const handleChange = (e) => setTask(e.target.value);
 
   const handleForm = async (e) => {
