@@ -56,7 +56,7 @@ const frontendPath = path.resolve(__dirname, "../frontend/dist");
 
 app.use(express.static(frontendPath));
 
-app.get("*", (req, res) => {
+app.get(/^(?!\/auth|\/dashboard).*$/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
 });
 
