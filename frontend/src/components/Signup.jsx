@@ -21,7 +21,7 @@ const Signup = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-       `${api}/auth/signup`,
+       `/auth/signup`,
         formData,
         { withCredentials: true }
       );

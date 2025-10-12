@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get(`${api}/auth/check`, {
+        await axios.get(`/auth/check`, {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",

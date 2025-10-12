@@ -15,7 +15,7 @@ const TodoAdd = ({ addNewTodo }) => {
     }
     try {
       const res = await axios.post(
-       `${api}/dashboard`,
+       `/dashboard`,
         { text: task },
         { withCredentials: true }
       );

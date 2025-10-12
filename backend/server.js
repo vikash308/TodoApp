@@ -27,8 +27,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: true,       // must be true if frontend uses HTTPS
-        sameSite: "none",   // allows cross-origin cookies
+        secure: process.env.NODE_ENV === "production",       // must be true if frontend uses HTTPS
+        sameSite: "lax",   // allows cross-origin cookies
         maxAge: 1000 * 60 * 60 * 24 // 1 day
     }
 }));
@@ -37,6 +37,16 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+
+const path = require("path");
+
+// Serve React build
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 //      Routes
 app.get("/", (req, res) => {

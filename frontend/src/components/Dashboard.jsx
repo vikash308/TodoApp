@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get(`${api}/dashboard`, {
+      const res = await axios.get(`/dashboard`, {
         withCredentials: true,
       });
       setTodos(res.data);
@@ -39,7 +39,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${api}/dashboard/${id}`, {
+      await axios.delete(`/dashboard/${id}`, {
         withCredentials: true,
       });
       fetchTodos();
@@ -51,7 +51,7 @@ const Dashboard = () => {
   const handleMarkDone = async (id) => {
     try {
       await axios.put(
-        `${api}/dashboard/${id}`,
+        `/dashboard/${id}`,
         { status: "completed" },
         { withCredentials: true }
       );
@@ -69,7 +69,7 @@ const Dashboard = () => {
   const handleEditSave = async (id) => {
     try {
       await axios.put(
-        `${api}/dashboard/${id}`,
+        `/dashboard/${id}`,
         { text: editText },
         { withCredentials: true }
       );
