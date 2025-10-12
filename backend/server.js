@@ -39,14 +39,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-const path = require("path");
 
-// Serve React build
-app.use(express.static(path.join(__dirname, "frontend/build")));
-
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
 
 //      Routes
 app.get("/", (req, res) => {
@@ -56,7 +49,16 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter)
 app.use("/dashboard", todoRouter)
 
+const path = require("path");
 
+// Serve React build
+const frontendPath = path.resolve(__dirname, "../frontend/dist");
+
+app.use(express.static(frontendPath));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+});
 
 //      Connection of DB
 const port = process.env.PORT || 3000;
