@@ -1,11 +1,11 @@
 const express = require("express");
 const Todo = require("../models/todo");
 const User = require("../models/user")
-const isAuth = require("../middlewares");
+
 const router = express.Router();
 
 
-router.post("/", isAuth, async (req, res) => {
+router.post("/",  async (req, res) => {
     try {
         const { text } = req.body;
         const userId = req.user._id;
@@ -27,7 +27,7 @@ router.post("/", isAuth, async (req, res) => {
     }
 });
 
-router.get("/", isAuth, async (req, res) => {
+router.get("/",  async (req, res) => {
     try {
         // Find the logged-in user and populate todos
         const user = await User.findById(req.user._id).populate("todos");
@@ -42,7 +42,7 @@ router.get("/", isAuth, async (req, res) => {
     }
 });
 
-router.delete("/:id", isAuth, async (req, res) => {
+router.delete("/:id",  async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -60,7 +60,7 @@ router.delete("/:id", isAuth, async (req, res) => {
     }
 });
 
-router.put("/:id", isAuth, async (req, res) => {
+router.put("/:id",  async (req, res) => {
     try {
         const { id } = req.params;
         const { status, text } = req.body;

@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user")
 const passport = require("passport")
-const isAuth = require("../middlewares");
 
 router.post("/signup", async (req, res) => {
     try {
@@ -37,7 +36,7 @@ router.get("/logout", (req, res) => {
     });
 });
 
-router.get("/check", isAuth, (req, res) => {
+router.get("/check", (req, res) => {
     res.json({ message: "User is logged in", user: req.user });
 });
 
