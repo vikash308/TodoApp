@@ -9,7 +9,7 @@ const todoRouter = require("./routes/todo")
 const cors = require("cors")
 const methodOverride = require('method-override')
 const path = require("path");
-
+const mongoStore = require("connect-mongo")
 const app = express();
 
 //      Midllewares
@@ -20,17 +20,35 @@ app.use(cors({
 app.use(methodOverride('_method'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
+
+
+const store = mongoStore.create({
+    mongoUrl: process.env.DB_URL,
+    crypto: {
+        secret: process.env.SECRET
+    },
+    touchAfter: 24 * 3600
+})
+store.on("error", () => {
+    console.log("error in mongo session ", err)
+})
+const sessionoption = {
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-}))
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true
+    },
+    store
+}
+app.use(session(sessionoption));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 
 // Serve frontend build
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
