@@ -7,10 +7,11 @@ const Dashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
+  let api = process.env.VITE_API_URL;
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/dashboard", {
+      const res = await axios.get(`${api}/dashboard`, {
         withCredentials: true,
       });
       setTodos(res.data);
@@ -38,7 +39,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/dashboard/${id}`, {
+      await axios.delete(`${api}/dashboard/${id}`, {
         withCredentials: true,
       });
       fetchTodos();
@@ -50,7 +51,7 @@ const Dashboard = () => {
   const handleMarkDone = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/dashboard/${id}`,
+        `${api}/dashboard/${id}`,
         { status: "completed" },
         { withCredentials: true }
       );
@@ -68,7 +69,7 @@ const Dashboard = () => {
   const handleEditSave = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/dashboard/${id}`,
+        `${api}/dashboard/${id}`,
         { text: editText },
         { withCredentials: true }
       );

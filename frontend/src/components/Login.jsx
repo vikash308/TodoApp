@@ -7,7 +7,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
+let api = process.env.VITE_API_URL;
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -17,7 +17,7 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/login",
+       `${api}auth/login`,
         { username: formData.username, password: formData.password },
         { withCredentials: true }
       );

@@ -4,11 +4,11 @@ import axios from "axios";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuth, setIsAuth] = useState(null); 
-
+let api = process.env.VITE_API_URL;
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get("http://localhost:3000/auth/check", {
+        await axios.get(`${api}/auth/check`, {
           withCredentials: true,
         });
         setIsAuth(true); // user is authenticated

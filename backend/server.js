@@ -13,8 +13,8 @@ const app = express();
 
 //      Midllewares
 app.use(cors({
-    origin: "http://localhost:5173", // React app URL
-    credentials: true               // allow cookies (needed for session)
+    origin: process.env.FRONTEND_URL, 
+    credentials: true
 }));
 app.use(methodOverride('_method'))
 app.use(express.json());

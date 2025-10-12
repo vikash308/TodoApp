@@ -11,7 +11,7 @@ const Signup = () => {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
+let api = process.env.VITE_API_URL;
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -21,7 +21,7 @@ const Signup = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/signup",
+       `${api}/auth/signup`,
         formData,
         { withCredentials: true }
       );
