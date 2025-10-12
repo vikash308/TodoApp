@@ -52,7 +52,7 @@ app.use("/dashboard", todoRouter)
 const path = require("path");
 
 // Serve React build
-const frontendPath = path.resolve(__dirname, "../frontend/dist");
+const frontendPath = path.resolve(__dirname, "../frontend");
 
 app.use(express.static(frontendPath));
 
