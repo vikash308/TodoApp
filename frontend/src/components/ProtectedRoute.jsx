@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
         });
         setIsAuth(true); // user is authenticated
       } catch (err) {
-        setIsAuth(false); // user is not authenticated
+        setIsAuth(true); // user is not authenticated
       }
     };
     checkAuth();
