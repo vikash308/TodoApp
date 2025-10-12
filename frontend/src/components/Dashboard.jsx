@@ -7,7 +7,8 @@ const Dashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
-  const [isAuth, setIsAuth] = useState(true); // Track login
+  const [error, setError] = useState("");
+  const [isAuth, setIsAuth] = useState(true); // NEW
   let api = import.meta.env.VITE_API_URL;
 
   const fetchTodos = async () => {
@@ -16,13 +17,15 @@ const Dashboard = () => {
         withCredentials: true,
       });
       setTodos(res.data);
+      setError("");
       setIsAuth(true);
     } catch (err) {
+      console.log("Error Fetching Todos", err);
       if (err.response && err.response.status === 401) {
-        setIsAuth(false); // not logged in
-        setTodos([]); // clear todos
+        setError("⚠️ Please login to see your tasks.");
+        setIsAuth(false); // user is not authenticated
       } else {
-        console.log("Error Fetching Todos", err);
+        setError("❌ Something went wrong while fetching todos.");
       }
     }
   };
@@ -44,27 +47,30 @@ const Dashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const statusBg = {
-    pending: "bg-red-500/30 border border-red-400",
-    progress: "bg-blue-500/30 border border-blue-400",
-    completed: "bg-green-500/30 border border-green-400",
-  };
+  // If there is an error, show it
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-center p-6">
+        <p className="text-xl font-semibold text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-pink-200 via-yellow-200 to-green-200 p-6">
       <div className="max-w-4xl mx-auto bg-white/20 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/30 animate-fadeIn">
-        <h2 className="text-4xl font-bold mb-2 text-center text-purple-700 animate-pulse">
+        <h2 className="text-4xl font-bold mb-6 text-center text-purple-700 animate-pulse">
           ⚡ Todo List
         </h2>
 
-        {!isAuth && (
-          <p className="text-center text-red-600 mb-4 font-semibold">
-            ⚠️ Please login to add and view tasks.
-          </p>
-        )}
-
         <div className="mb-6">
-          <TodoAdd addNewTodo={addNewTodo} disabled={!isAuth} />
+          {isAuth ? (
+            <TodoAdd addNewTodo={addNewTodo} />
+          ) : (
+            <p className="text-center text-red-600 font-semibold">
+              ⚠️ You need to login to add tasks.
+            </p>
+          )}
         </div>
 
         <h3 className="text-2xl font-semibold mb-4 border-b border-white/30 pb-2 text-black">
@@ -81,15 +87,11 @@ const Dashboard = () => {
                   "bg-gray-800/40 border border-gray-700"
                 }`}
               >
-                {/* your todo item content */}
+                {/* rest of your todo rendering code */}
               </div>
             ))
           ) : (
-            <p className="text-black/70">
-              {isAuth
-                ? "No todos yet. Add one above! 🌟"
-                : "Login to see your tasks."}
-            </p>
+            <p className="text-black/70">No todos yet. Add one above! 🌟</p>
           )}
         </div>
       </div>
