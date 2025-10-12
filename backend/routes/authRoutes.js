@@ -13,7 +13,7 @@ router.post("/signup", async (req, res) => {
         const user = new User({ email, username });
         await User.register(user, password);
 
-        req.login(User, (err) => {
+        req.login(user, (err) => {
             if (err) {
                 return next(err)
             }
