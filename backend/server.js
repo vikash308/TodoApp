@@ -14,7 +14,7 @@ const app = express();
 
 //      Midllewares
 app.use(cors({
-    origin: "http://localhost:5173", // React app URL
+    origin: "https://todoapp-zo2c.onrender.com", // React app URL
     credentials: true               // allow cookies (needed for session)
 }));
 app.use(methodOverride('_method'))
