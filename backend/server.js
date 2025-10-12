@@ -8,51 +8,27 @@ const User = require("./models/user")
 const todoRouter = require("./routes/todo")
 const cors = require("cors")
 const methodOverride = require('method-override')
-const path = require("path");
-const mongoStore = require("connect-mongo")
+
 const app = express();
 
 //      Midllewares
 app.use(cors({
-    origin: "https://todoapp-zo2c.onrender.com", // React app URL
+    origin: "http://localhost:5173", // React app URL
     credentials: true               // allow cookies (needed for session)
 }));
 app.use(methodOverride('_method'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
-const store = mongoStore.create({
-    mongoUrl: process.env.DB_URL,
-    crypto: {
-        secret: process.env.SECRET
-    },
-    touchAfter: 24 * 3600
-})
-store.on("error", (err) => {
-    console.log("error in mongo session ", err)
-})
-const sessionoption = {
+app.use(session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        secure: process.env.NODE_ENV === "production", // HTTPS only
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    },
-    store
-}
-app.use(session(sessionoption));
+}))
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-// Serve frontend build
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 //      Routes
 app.get("/", (req, res) => {
@@ -61,9 +37,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRouter)
 app.use("/dashboard", todoRouter)
-app.get((req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
-});
+
 
 
 //      Connection of DB

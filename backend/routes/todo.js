@@ -49,7 +49,7 @@ router.delete("/:id", isAuth, async (req, res) => {
         // Delete the todo
         await Todo.findByIdAndDelete(id);
 
-        // Remove reference from user's todos
+        // zRemove reference from user's todos
         await User.findByIdAndUpdate(req.user._id, {
             $pull: { todos: id },
         });
