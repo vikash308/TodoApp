@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +11,15 @@ const Signup = () => {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  useEffect(() => {
+    // Remove JWT on page load
+    localStorage.removeItem("token");
+  }, []);
 
   const handleForm = async (e) => {
     e.preventDefault();
@@ -27,7 +32,7 @@ const API_URL = import.meta.env.VITE_API_URL;
           email: formData.email,
           password: formData.password,
         },
-        { withCredentials: true }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       setMessage(res.data.message);

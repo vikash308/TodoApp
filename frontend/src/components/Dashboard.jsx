@@ -10,6 +10,9 @@ const Dashboard = () => {
   const [editText, setEditText] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
 
+  // Get username from localStorage
+  const username = localStorage.getItem("username") || "User";
+
   const fetchTodos = async () => {
     try {
       const res = await axios.get(`${API_URL}/dashboard`, {
@@ -92,9 +95,25 @@ const Dashboard = () => {
     completed: "bg-green-500/30 border border-green-400",
   };
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/"; 
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-pink-200 via-yellow-200 to-green-200 p-6">
       <div className="max-w-4xl mx-auto bg-white/20 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/30 animate-fadeIn">
+        {/* ✅ Logged-in user + Logout */}
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+          >
+            Logout
+          </button>
+        </div>
+
         <h2 className="text-4xl font-bold mb-6 text-center text-purple-700 animate-pulse">
           ⚡ Todo List
         </h2>
@@ -138,12 +157,11 @@ const Dashboard = () => {
                 </div>
 
                 <div className="relative">
-                  {/* Menu button: transparent normally, solid when open */}
                   <button
                     onClick={() => toggleMenu(todo._id)}
                     className={`menu-button p-2 rounded-full transition ${
                       openMenuId === todo._id
-                        ? " text-black bold"
+                        ? "text-black bold"
                         : "hover:bg-white/20"
                     }`}
                   >
@@ -151,16 +169,16 @@ const Dashboard = () => {
                   </button>
 
                   {openMenuId === todo._id && (
-                    <div className="menu-dropdown absolute right-0 text-black mt-2 w-44  border border-gray-300 rounded-xl shadow-lg flex flex-col z-20 bg-gradient-to-r from-pink-200 via-yellow-200 to-green-200 ">
+                    <div className="menu-dropdown absolute right-0 text-black mt-2 w-44 border border-gray-300 rounded-xl shadow-lg flex flex-col z-20 bg-gradient-to-r from-pink-200 via-yellow-200 to-green-200">
                       <button
                         onClick={() => handleDelete(todo._id)}
-                        className="px-4 py-2 text-left text-black font-semibold  rounded-t-xl"
+                        className="px-4 py-2 text-left text-black font-semibold rounded-t-xl"
                       >
                         ❌ Delete
                       </button>
                       <button
                         onClick={() => handleMarkDone(todo._id)}
-                        className="px-4 py-2 text-left  text-black font-semibold transition-colors"
+                        className="px-4 py-2 text-left text-black font-semibold transition-colors"
                       >
                         ✅ Mark as Done
                       </button>
