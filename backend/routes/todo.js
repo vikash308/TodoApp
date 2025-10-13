@@ -1,33 +1,27 @@
 const express = require("express");
 const Todo = require("../models/todo");
 const User = require("../models/user")
-
+const isAuth = require("../middlewares");
 const router = express.Router();
 
 
-router.post("/",  async (req, res) => {
-    try {
-        const { text } = req.body;
-        const userId = req.user._id;
+router.post("/", isAuth, async (req, res) => {
+    const { text } = req.body;
+    const userId = req.user._id;
 
-        // 1. Create new todo
-        const newTodo = new Todo({ text, date: new Date() });
-        await newTodo.save();
+    // 1. Create new todo
+    const newTodo = new Todo({ text, date: new Date() });
+    await newTodo.save();
 
-        // 2. Push todo into user
-        const user = await User.findById(userId);
-        user.todos.push(newTodo._id);
-        await user.save();
+    // 2. Push todo into user's todos array
+    const user = await User.findById(userId);
+    user.todos.push(newTodo._id);
+    await user.save();
 
-        res.json({ message: "Task added successfully", todo: newTodo });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error adding task" });
-    }
+    res.json({ message: "Task added successfully", todo: newTodo });
 });
 
-router.get("/",  async (req, res) => {
+router.get("/", isAuth, async (req, res) => {
     try {
         // Find the logged-in user and populate todos
         const user = await User.findById(req.user._id).populate("todos");
@@ -42,14 +36,14 @@ router.get("/",  async (req, res) => {
     }
 });
 
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", isAuth, async (req, res) => {
     try {
         const { id } = req.params;
 
         // Delete the todo
         await Todo.findByIdAndDelete(id);
 
-        // zRemove reference from user's todos
+        // Remove reference from user's todos
         await User.findByIdAndUpdate(req.user._id, {
             $pull: { todos: id },
         });
@@ -60,7 +54,7 @@ router.delete("/:id",  async (req, res) => {
     }
 });
 
-router.put("/:id",  async (req, res) => {
+router.put("/:id", isAuth, async (req, res) => {
     try {
         const { id } = req.params;
         const { status, text } = req.body;
@@ -82,5 +76,4 @@ router.put("/:id",  async (req, res) => {
     }
 });
 module.exports = router;
-
 

@@ -7,26 +7,15 @@ const Dashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
-  const [error, setError] = useState("");
-  const [isAuth, setIsAuth] = useState(true); // NEW
-  let api = import.meta.env.VITE_API_URL;
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get(`${api}/dashboard`, {
+      const res = await axios.get("http://localhost:3000/dashboard", {
         withCredentials: true,
       });
       setTodos(res.data);
-      setError("");
-      setIsAuth(true);
     } catch (err) {
       console.log("Error Fetching Todos", err);
-      if (err.response && err.response.status === 401) {
-        setError("⚠️ Please login to see your tasks.");
-        setIsAuth(false); // user is not authenticated
-      } else {
-        setError("❌ Something went wrong while fetching todos.");
-      }
     }
   };
 
@@ -35,63 +24,162 @@ const Dashboard = () => {
   }, []);
 
   const addNewTodo = () => fetchTodos();
+
   const toggleMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       const buttonClicked = e.target.closest(".menu-button");
       const menuClicked = e.target.closest(".menu-dropdown");
-      if (!buttonClicked && !menuClicked) setOpenMenuId(null);
+      if (!buttonClicked && !menuClicked) {
+        setOpenMenuId(null);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // If there is an error, show it
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-center p-6">
-        <p className="text-xl font-semibold text-red-600">{error}</p>
-      </div>
-    );
-  }
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/dashboard/${id}`, {
+        withCredentials: true,
+      });
+      fetchTodos();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleMarkDone = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/dashboard/${id}`,
+        { status: "completed" },
+        { withCredentials: true }
+      );
+      fetchTodos();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleEditClick = (todo) => {
+    setEditId(todo._id);
+    setEditText(todo.text);
+  };
+
+  const handleEditSave = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/dashboard/${id}`,
+        { text: editText },
+        { withCredentials: true }
+      );
+      setEditId(null);
+      setEditText("");
+      fetchTodos();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const statusBg = {
+    pending: "bg-red-900/40 border border-red-600",
+    progress: "bg-blue-900/40 border border-blue-600",
+    completed: "bg-green-900/40 border border-green-600 shadow-green-500/20",
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-pink-200 via-yellow-200 to-green-200 p-6">
-      <div className="max-w-4xl mx-auto bg-white/20 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/30 animate-fadeIn">
-        <h2 className="text-4xl font-bold mb-6 text-center text-purple-700 animate-pulse">
+    <div className="min-h-screen bg-black text-white p-6">
+      <div className="max-w-3xl mx-auto bg-gray-900 p-6 rounded-2xl shadow-2xl border border-gray-800">
+        <h2 className="text-3xl font-bold mb-4 text-center text-blue-400">
           ⚡ Todo List
         </h2>
 
         <div className="mb-6">
-          {isAuth ? (
-            <TodoAdd addNewTodo={addNewTodo} />
-          ) : (
-            <p className="text-center text-red-600 font-semibold">
-              ⚠️ You need to login to add tasks.
-            </p>
-          )}
+          <TodoAdd addNewTodo={addNewTodo} />
         </div>
 
-        <h3 className="text-2xl font-semibold mb-4 border-b border-white/30 pb-2 text-black">
+        <h3 className="text-xl font-semibold mb-2 border-b border-gray-700 pb-2">
           Your Todos:
         </h3>
-
-        <div className="space-y-4">
+        <div className="space-y-3">
           {todos.length > 0 ? (
             todos.map((todo) => (
               <div
                 key={todo._id}
-                className={`flex justify-between items-center p-4 rounded-xl shadow-lg transform transition-transform duration-150 relative ${
+                className={`flex justify-between items-center p-4 rounded-lg shadow-xl hover:shadow-blue-500/20 transition-transform  relative ${
                   statusBg[todo.status] ||
-                  "bg-gray-800/40 border border-gray-700"
+                  "bg-gray-800/60 border border-gray-700"
                 }`}
               >
-                {/* rest of your todo rendering code */}
+                <div className="flex-1">
+                  {editId === todo._id ? (
+                    <input
+                      type="text"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="border px-2 py-1 rounded w-full bg-gray-800 text-white"
+                    />
+                  ) : (
+                    <p
+                      className={`font-medium ${
+                        todo.status === "completed"
+                          ? "line-through text-gray-500"
+                          : "text-gray-100"
+                      }`}
+                    >
+                      {todo.text}
+                    </p>
+                  )}
+                  <p className="text-sm text-gray-500">
+                    {todo.date
+                      ? new Date(todo.date).toLocaleDateString()
+                      : "No date"}{" "}
+                    | Status:{" "}
+                    <span className="text-blue-400">{todo.status}</span>
+                  </p>
+                </div>
+
+                <div className="relative">
+                  <button
+                    onClick={() => toggleMenu(todo._id)}
+                    className="menu-button p-2 rounded-full hover:bg-gray-700 transition"
+                  >
+                    &#x22EE;
+                  </button>
+
+                  {openMenuId === todo._id && (
+                    <div className="menu-dropdown absolute right-0 mt-2 w-40 bg-gray-900 border border-gray-700 rounded-lg shadow-xl flex flex-col z-20">
+                      <button
+                        onClick={() => handleDelete(todo._id)}
+                        className="px-4 py-2 text-left hover:bg-red-600/30 text-red-400 transition-colors"
+                      >
+                        ❌ Delete
+                      </button>
+                      <button
+                        onClick={() => handleMarkDone(todo._id)}
+                        className="px-4 py-2 text-left hover:bg-green-600/30 text-green-400 transition-colors"
+                      >
+                        ✅ Mark as Done
+                      </button>
+                      <button
+                        onClick={() =>
+                          editId === todo._id
+                            ? handleEditSave(todo._id)
+                            : handleEditClick(todo)
+                        }
+                        className="px-4 py-2 text-left hover:bg-blue-600/30 text-blue-400 transition-colors"
+                      >
+                        ✏️ {editId === todo._id ? "Save" : "Edit"}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             ))
           ) : (
-            <p className="text-black/70">No todos yet. Add one above! 🌟</p>
+            <p className="text-gray-500">No todos yet</p>
           )}
         </div>
       </div>

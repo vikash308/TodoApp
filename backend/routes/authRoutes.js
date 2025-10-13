@@ -2,32 +2,35 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user")
 const passport = require("passport")
+const isAuth = require("../middlewares");
+const jwt = require("jsonwebtoken");
 
+// Signup
 router.post("/signup", async (req, res) => {
     try {
-        const { email, password, username } = req.body;
-        const existing = await User.findOne({ email });
-        if (existing) return res.status(400).json({ message: "Email already in use" });
-
-        const user = new User({ email, username });
-        await User.register(user, password);
-
-        req.login(user, (err) => {
-            if (err) {
-                return next(err)
-            }
-        })
-
+        const user = new User({ username: req.body.username });
+        await User.register(user, req.body.password);
         res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
-        res.status(500).json({ message: "Registration failed", error: err.message });
+        res.status(400).json({ error: err.message });
     }
 });
 
-router.post("/login", passport.authenticate("local"), (req, res) => {
-  
-    res.json({ message: "Logged in successfully", user: req.user });
+// Login
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) return res.status(401).json({ error: "User not found" });
+
+    user.authenticate(password, (err, result) => {
+        if (err || !result) return res.status(401).json({ error: "Invalid password" });
+
+        // Generate JWT
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        res.json({ message: "Logged in successfully", token });
+    });
 });
+
 
 router.get("/logout", (req, res) => {
     req.logout(err => {
@@ -36,9 +39,18 @@ router.get("/logout", (req, res) => {
     });
 });
 
-router.get("/check", (req, res) => {
-    res.json({ message: "User is logged in", user: req.user });
+// authRoutes.js
+router.get("/check", passport.authenticate("jwt", { session: false }), (req, res) => {
+    // If token is valid, req.user exists
+    res.json({
+        message: "User is logged in",
+        user: {
+            id: req.user._id,
+            username: req.user.username
+        }
+    });
 });
+
 
 
 
