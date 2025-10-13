@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import Loading from "./Loading";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuth, setIsAuth] = useState(null);
@@ -21,7 +22,7 @@ const API_URL = import.meta.env.VITE_API_URL;
     checkAuth();
   }, []);
 
-  if (isAuth === null) return <p>Loading...</p>;
+  if (isAuth === null) return <Loading/>;
   return isAuth ? children : <Navigate to="/" replace />; // redirect if not logged in
 };
 

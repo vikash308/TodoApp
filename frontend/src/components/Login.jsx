@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,19 +7,24 @@ const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  // Signup page load hone par
+  useEffect(() => {
+    // Remove JWT on page load
+    localStorage.removeItem("token");
+  }, []);
 
   const handleForm = async (e) => {
     e.preventDefault();
-     setLoading(true);
+    setLoading(true);
     try {
       const res = await axios.post(
         `${API_URL}/auth/login`,
         { username: formData.username, password: formData.password },
-        { withCredentials: true }
+        { headers: { "Content-Type": "application/json" } }
       );
       const token = res.data.token;
       localStorage.setItem("token", token);
