@@ -59,7 +59,7 @@ app.use("/dashboard", passport.authenticate('jwt', { session: false }), todoRout
 app.use(express.static(path.join(__dirname, "frontend"))); // adjust path to your Vite build
 
 // Catch-all route for SPA (after all backend routes)
-app.get(/^(?!\/auth|\/dashboard).*$/, (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
