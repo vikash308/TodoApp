@@ -29,7 +29,7 @@ const Login = () => {
       const token = res.data.token;
       localStorage.setItem("token", token);
       setMessage(res.data.message);
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
     } finally {
