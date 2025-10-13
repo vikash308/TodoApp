@@ -10,7 +10,7 @@ const Signup = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
-
+const API_URL = import.meta.env.VITE_API_URL;
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -19,7 +19,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/signup",
+        `${API_URL}/auth/signup`,
         {
           username: formData.username,
           email: formData.email,

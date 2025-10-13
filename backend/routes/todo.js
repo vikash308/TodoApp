@@ -24,7 +24,10 @@ router.post("/", isAuth, async (req, res) => {
 router.get("/", isAuth, async (req, res) => {
     try {
         // Find the logged-in user and populate todos
+        console.log(req.user._id)
         const user = await User.findById(req.user._id).populate("todos");
+        
+
 
         if (!user) return res.status(404).json({ message: "User not found" });
 

@@ -1,6 +1,5 @@
-function isAuth(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.status(401).json({ message: "Please Login First" });
-}
+const passport = require("passport");
+
+const isAuth = passport.authenticate("jwt", { session: false });
 
 module.exports = isAuth;

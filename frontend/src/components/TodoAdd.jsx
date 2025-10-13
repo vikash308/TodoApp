@@ -4,7 +4,7 @@ import axios from "axios";
 const TodoAdd = ({ addNewTodo }) => {
   const [task, setTask] = useState("");
   const [message, setMessage] = useState("");
-
+const API_URL = import.meta.env.VITE_API_URL;
   const handleChange = (e) => setTask(e.target.value);
 
   const handleForm = async (e) => {
@@ -15,7 +15,7 @@ const TodoAdd = ({ addNewTodo }) => {
     }
     try {
       const res = await axios.post(
-        "http://localhost:3000/dashboard",
+       `${API_URL}/dashboard`,
         { text: task },
         { withCredentials: true }
       );
