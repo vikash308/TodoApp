@@ -49,6 +49,21 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter); // Auth routes should return JWT on login/signup
 app.use("/dashboard", passport.authenticate('jwt', { session: false }), todoRouter);
 
+const path = require("path");
+
+// Serve API routes first
+app.use("/auth", authRouter);
+app.use("/dashboard", passport.authenticate('jwt', { session: false }), todoRouter);
+
+// Serve React build (after all API routes)
+app.use(express.static(path.join(__dirname, "frontend"))); // adjust path to your Vite build
+
+// Catch-all route for SPA (after all backend routes)
+app.get(/^(?!\/auth|\/dashboard).*$/, (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "index.html"));
+});
+
+
 // DB Connection
 const port = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
