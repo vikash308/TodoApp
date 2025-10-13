@@ -37,7 +37,7 @@ const Signup = () => {
 
       setMessage(res.data.message);
       setFormData({ username: "", email: "", password: "" });
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
     } finally {
