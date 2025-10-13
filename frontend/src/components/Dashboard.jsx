@@ -11,7 +11,9 @@ const API_URL = import.meta.env.VITE_API_URL;
   const fetchTodos = async () => {
     try {
       const res = await axios.get(`${API_URL}/dashboard`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       setTodos(res.data);
     } catch (err) {
@@ -42,7 +44,9 @@ const API_URL = import.meta.env.VITE_API_URL;
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}/dashboard/${id}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       fetchTodos();
     } catch (err) {
@@ -55,7 +59,11 @@ const API_URL = import.meta.env.VITE_API_URL;
       await axios.put(
         `${API_URL}/dashboard/${id}`,
         { status: "completed" },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       fetchTodos();
     } catch (err) {
@@ -73,7 +81,11 @@ const API_URL = import.meta.env.VITE_API_URL;
       await axios.put(
         `${API_URL}/dashboard/${id}`,
         { text: editText },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       setEditId(null);
       setEditText("");

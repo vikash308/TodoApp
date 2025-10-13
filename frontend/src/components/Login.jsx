@@ -19,7 +19,8 @@ const API_URL = import.meta.env.VITE_API_URL;
         { username: formData.username, password: formData.password },
         { withCredentials: true }
       );
-
+      const token = res.data.token;
+       localStorage.setItem("token", token);
       setMessage(res.data.message);
       navigate("/dashboard");
     } catch (err) {

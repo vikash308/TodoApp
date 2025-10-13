@@ -9,7 +9,9 @@ const API_URL = import.meta.env.VITE_API_URL;
     const checkAuth = async () => {
       try {
         await axios.get(`${API_URL}/auth/check`, {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
         setIsAuth(true); // user is authenticated
       } catch (err) {
