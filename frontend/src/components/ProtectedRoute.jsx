@@ -22,8 +22,7 @@ const API_URL = import.meta.env.VITE_API_URL;
     checkAuth();
   }, []);
 
-  if (isAuth === null) return <Loading/>;
-  return isAuth ? children : <Navigate to="/" replace />; // redirect if not logged in
+  return isAuth ? children : <Navigate to="/login" replace />; // redirect if not logged in
 };
 
 export default ProtectedRoute;
