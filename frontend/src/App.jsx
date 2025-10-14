@@ -4,7 +4,6 @@ import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import React from "react";
-import { HashRouter } from "react-router-dom";
 
 function App() {
   return (
@@ -15,11 +14,7 @@ function App() {
         path="/"
         element={
           <ProtectedRoute>
-            <HashRouter>
-              {" "}
-              {/* ✅ Wrap App inside HashRouter */}
              <Dashboard/>
-            </HashRouter>
           </ProtectedRoute>
         }
       />
