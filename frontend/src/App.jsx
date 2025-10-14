@@ -4,9 +4,11 @@ import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import React from "react";
+import {BrowserRouter} from 'react-router-dom';
 
 function App() {
   return (
+    <browserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
@@ -19,6 +21,7 @@ function App() {
         }
       />
     </Routes>
+      </browserRouter>
   );
 }
 
