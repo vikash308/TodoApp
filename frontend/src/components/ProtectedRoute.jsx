@@ -21,6 +21,8 @@ const API_URL = import.meta.env.VITE_API_URL;
     checkAuth();
   }, []);
 
+  if(isAuth == null) <h1> Loading...</h1>
+
   return isAuth ? children : <Navigate to="/login" replace />; // redirect if not logged in
 };
 
