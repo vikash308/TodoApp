@@ -11,11 +11,7 @@ const Login = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  // Signup page load hone par
-  useEffect(() => {
-    // Remove JWT on page load
-    localStorage.removeItem("token");
-  }, []);
+
 
   const handleForm = async (e) => {
     e.preventDefault();
