@@ -4,7 +4,8 @@ import axios from "axios";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuth, setIsAuth] = useState(null);
-const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -13,17 +14,18 @@ const API_URL = import.meta.env.VITE_API_URL;
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setIsAuth(true); // user is authenticated
+        setIsAuth(true);
       } catch (err) {
-        setIsAuth(false); // user is not authenticated
+        setIsAuth(false);
       }
     };
     checkAuth();
   }, []);
 
-  if(isAuth == null) <h1> Loading...</h1>
+  // ✅ MUST return while loading
+  if (isAuth === null) return <h1>Loading...</h1>;
 
-  return isAuth ? children : <Navigate to="/login" replace />; // redirect if not logged in
+  return isAuth ? children : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;
