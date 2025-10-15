@@ -3,7 +3,7 @@
 A modern **full-stack Todo application** built with **React**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, and **Passport.js** for authentication. Users can **signup, login, add, edit, delete, and mark todos as done**.  
 
 
-[🚀 Live Demo](https://todoapp-zo2c.onrender.com)]
+[🚀 Live Demo](https://todoapp-zo2c.onrender.com)
 
 ---
 
